@@ -1,11 +1,8 @@
 package org.ginafro.notenoughfakepixel.features.skyblock.slayers;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.World;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.item.EntityArmorStand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.ginafro.notenoughfakepixel.Configuration;
@@ -34,7 +31,7 @@ public class FirePillarDisplay {
 
 
         String rawName = armorStand.getDisplayName().getUnformattedText();
-        String cleanName = rawName.trim().replaceAll("ยง.", "");
+        String cleanName = rawName.trim().replaceAll("§.", "");
 
         String[] parts = cleanName.split(" ");
         if (parts.length != 3) return;
@@ -67,10 +64,18 @@ public class FirePillarDisplay {
 
         // play pling sound every X seconds
         if (System.currentTimeMillis() - lastSoundTime > seconds * 1000) {
-            mc.getSoundHandler().playSound(
-                    PositionedSoundRecord.create(new ResourceLocation("note.pling"), 1.0F)
+            if (mc.theWorld != null) {
+            mc.theWorld.playSound(
+                    mc.thePlayer.posX,
+                    mc.thePlayer.posY,
+                    mc.thePlayer.posZ,
+                    "random.orb",
+                    1.0F,
+                    1.0F,
+                    false
             );
             lastSoundTime = System.currentTimeMillis();
+            }
         }
     }
 }

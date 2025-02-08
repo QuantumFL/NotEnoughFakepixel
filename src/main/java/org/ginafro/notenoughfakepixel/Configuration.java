@@ -192,6 +192,8 @@ public class Configuration extends Config {
     @Switch(name = "Dungeons Map Rotation" , category = DUNGEONS, subcategory = "Dungeon Map")
     public static boolean dungeonsRotateMap = true;
 
+
+
     @Switch(name = "Fel Mobs Display" , category = DUNGEONS, subcategory = "Starred Mobs")
     public static boolean dungeonsFelMob = true;
     @Color(name = "Fel Mob Color", category = DUNGEONS, subcategory = "Starred Mobs")
@@ -263,6 +265,8 @@ public class Configuration extends Config {
     public static boolean dungeonsItemSecretsBig = true;
     @Slider(name = "Item Secrets Scale" ,category = DUNGEONS , subcategory = "Score & Secrets", description = "Change the size of secret items.", min = 0.1f,max=5f)
     public static float dungeonsScaleItemDrop = 3.0f;
+    @Switch(name = "Dungeons Secrets Waypoints" , category = DUNGEONS, subcategory = "Dungeon Secrets")
+    public static boolean dungeonsSecretsWaypoints = true;
     @Page(name = "Secret Overlay Options" , category = DUNGEONS, subcategory = "Score & Secrets", location = PageLocation.BOTTOM)
     public static ScoreOverlayPage dungeonsScoreOverlayPage = new ScoreOverlayPage();
 
@@ -327,7 +331,7 @@ public class Configuration extends Config {
     public static boolean slayerShowBeaconPath = true;
     @Color(name = "Beacon Color", category = SLAYER , subcategory = "Voidgloom Seraph", description = "Color of the beacon's waypoint.")
     public static OneColor slayerBeaconColor = new OneColor(128, 0, 128);
-    @Switch(name = "Show Beacon Waypoint" , category = SLAYER , subcategory = "Inferno Demonlord", description = "Displays a text on the screen when a pillar is nearby.")
+    @Switch(name = "Blaze Fire Pillar" , category = SLAYER , subcategory = "Inferno Demonlord", description = "Displays a text on the screen when a pillar is nearby.")
     public static boolean slayerFirePillarDisplay = true;
 
     // Enchanting

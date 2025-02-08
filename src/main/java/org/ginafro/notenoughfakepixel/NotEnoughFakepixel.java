@@ -12,6 +12,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.ginafro.notenoughfakepixel.commands.NefCommand;
+import org.ginafro.notenoughfakepixel.dungeons.catacombs.RoomDetection;
+import org.ginafro.notenoughfakepixel.dungeons.catacombs.Waypoints;
+import org.ginafro.notenoughfakepixel.dungeons.catacombs.DungeonManager;
 import org.ginafro.notenoughfakepixel.features.duels.KDCounter;
 import org.ginafro.notenoughfakepixel.features.skyblock.chocolate.ChocolateFactory;
 import org.ginafro.notenoughfakepixel.features.skyblock.crimson.AshfangHelper;
@@ -35,10 +38,8 @@ import org.ginafro.notenoughfakepixel.features.skyblock.mining.*;
 import org.ginafro.notenoughfakepixel.features.skyblock.overlays.StorageOverlay;
 import org.ginafro.notenoughfakepixel.features.skyblock.qol.*;
 import org.ginafro.notenoughfakepixel.features.skyblock.diana.*;
-import org.ginafro.notenoughfakepixel.features.skyblock.slayers.AutoOpenMaddox;
-import org.ginafro.notenoughfakepixel.features.skyblock.slayers.SlayerMobsDisplay;
+import org.ginafro.notenoughfakepixel.features.skyblock.slayers.*;
 import org.ginafro.notenoughfakepixel.events.Handlers.PacketHandler;
-import org.ginafro.notenoughfakepixel.features.skyblock.slayers.VoidgloomSeraph;
 import org.ginafro.notenoughfakepixel.utils.*;
 
 import java.io.File;
@@ -133,6 +134,9 @@ public class NotEnoughFakepixel {
         // Slayer
         MinecraftForge.EVENT_BUS.register(new SlayerMobsDisplay());
         MinecraftForge.EVENT_BUS.register(new VoidgloomSeraph());
+        MinecraftForge.EVENT_BUS.register(new FirePillarDisplay());
+        MinecraftForge.EVENT_BUS.register(new MinibossAlert());
+
       
         // Parsers
         MinecraftForge.EVENT_BUS.register(new TablistParser());
