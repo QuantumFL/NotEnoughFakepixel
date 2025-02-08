@@ -311,6 +311,10 @@ public class Configuration extends Config {
     public static boolean _slayer = true;
     @Switch(name = "Slayer Minibosses Display" , category = SLAYER , subcategory = "Slayer Mobs", description = "Draws a box around slayer minibosses.")
     public static boolean slayerMinibosses = true;
+    @Switch(name = "Slayer Minibosses Sound Alert" , category = SLAYER , subcategory = "Slayer Mobs", description = "Plays sound on mini boss spawn")
+    public static boolean slayerMinibossSound = true;
+    @Switch(name = "Slayer Minibosses Title Alert" , category = SLAYER , subcategory = "Slayer Mobs", description = "Shows title on mini boss spawn.")
+    public static boolean slayerMinibossTitle = true;
     @Color(name = "Slayer Minibosses Color", category = SLAYER , subcategory = "Slayer Mobs", description = "Color of the slayer minibosses.")
     public static OneColor slayerColor = new OneColor(92, 154, 255);
     @Switch(name = "Slayer Bosses Display" , category = SLAYER , subcategory = "Slayer Mobs", description = "Draws a box around slayer bosses.")
