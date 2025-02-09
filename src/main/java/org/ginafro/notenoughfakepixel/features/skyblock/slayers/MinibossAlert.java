@@ -47,12 +47,12 @@ public class MinibossAlert {
 
     private void triggerAlerts() {
         if (Configuration.slayerMinibossTitle) {
-            mc.ingameGUI.displayTitle(EnumChatFormatting.RED + "MiniBoss", "", 0, 10, 0); // Display title for 5 ticks (250ms)
-            // Display empty title after 5 ticks to clear the previous title
+            mc.ingameGUI.displayTitle(EnumChatFormatting.RED + "MiniBoss", "", 0, 10, 0);
+            // Display empty title after to clear the previous title
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    mc.ingameGUI.displayTitle("", "", 0, 5, 0); // Display empty title for 5 ticks (250ms)
+                    mc.ingameGUI.displayTitle("", "", 0, 5, 0);
                 }
             }, 1000);
         }
