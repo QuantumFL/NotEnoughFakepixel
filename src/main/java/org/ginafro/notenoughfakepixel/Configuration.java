@@ -265,7 +265,7 @@ public class Configuration extends Config {
     public static boolean dungeonsItemSecretsBig = true;
     @Slider(name = "Item Secrets Scale" ,category = DUNGEONS , subcategory = "Score & Secrets", description = "Change the size of secret items.", min = 0.1f,max=5f)
     public static float dungeonsScaleItemDrop = 3.0f;
-    @Switch(name = "Dungeons Secrets Waypoints" , category = DUNGEONS, subcategory = "Dungeon Secrets")
+    //@Switch(name = "Dungeons Secrets Waypoints" , category = DUNGEONS, subcategory = "Dungeon Secrets")
     public static boolean dungeonsSecretsWaypoints = true;
     @Page(name = "Secret Overlay Options" , category = DUNGEONS, subcategory = "Score & Secrets", location = PageLocation.BOTTOM)
     public static ScoreOverlayPage dungeonsScoreOverlayPage = new ScoreOverlayPage();
