@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -12,9 +13,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import org.ginafro.notenoughfakepixel.commands.NefCommand;
-//import org.ginafro.notenoughfakepixel.dungeons.catacombs.RoomDetection;
-//import org.ginafro.notenoughfakepixel.dungeons.catacombs.Waypoints;
-//import org.ginafro.notenoughfakepixel.dungeons.catacombs.DungeonManager;
+import org.ginafro.notenoughfakepixel.core.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.ginafro.notenoughfakepixel.features.duels.KDCounter;
 import org.ginafro.notenoughfakepixel.features.skyblock.chocolate.ChocolateFactory;
 import org.ginafro.notenoughfakepixel.features.skyblock.crimson.AshfangHelper;
@@ -44,13 +45,23 @@ import org.ginafro.notenoughfakepixel.features.skyblock.slayers.*;
 import org.ginafro.notenoughfakepixel.events.Handlers.PacketHandler;
 import org.ginafro.notenoughfakepixel.utils.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
 @Mod(modid = "notenoughfakepixel", useMetadata=true)
 public class NotEnoughFakepixel {
 
     public static Configuration config;
+    Minecraft mc = Minecraft.getMinecraft();
+    public static Logger logger;
     public File file;
+    public static JsonObject roomsJson;
+    public static JsonObject waypointsJson;
+    public static List<String> motd = null;
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         config = new Configuration();
@@ -60,7 +71,25 @@ public class NotEnoughFakepixel {
 
         MinecraftForge.EVENT_BUS.register(this);
         registerModEvents();
-         }
+
+
+         try {
+            ResourceLocation roomsLoc = new ResourceLocation( "dungeonrooms","dungeonrooms.json");
+            InputStream roomsIn = Minecraft.getMinecraft().getResourceManager().getResource(roomsLoc).getInputStream();
+            BufferedReader roomsReader = new BufferedReader(new InputStreamReader(roomsIn));
+
+            ResourceLocation waypointsLoc = new ResourceLocation( "dungeonrooms","secretlocations.json");
+            InputStream waypointsIn = Minecraft.getMinecraft().getResourceManager().getResource(waypointsLoc).getInputStream();
+            BufferedReader waypointsReader = new BufferedReader(new InputStreamReader(waypointsIn));
+
+            Gson gson = new Gson();
+            roomsJson = gson.fromJson(roomsReader, JsonObject.class);
+
+            waypointsJson = gson.fromJson(waypointsReader, JsonObject.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void registerModEvents() {
         // Dungeons
@@ -99,6 +128,8 @@ public class NotEnoughFakepixel {
         MinecraftForge.EVENT_BUS.register(new ScoreOverlay());
         MinecraftForge.EVENT_BUS.register(new SPlusNotifier());
         MinecraftForge.EVENT_BUS.register(new DungeonClearedNotifier());
+        MinecraftForge.EVENT_BUS.register(new AutoRoom());
+        MinecraftForge.EVENT_BUS.register(new Waypoints());
         MinecraftForge.EVENT_BUS.register(new MuteIrrelevantMessages());
 
         // Mining
@@ -200,5 +231,18 @@ public class NotEnoughFakepixel {
     public void onServerConnect(FMLNetworkEvent.ClientConnectedToServerEvent event) {
         event.manager.channel().pipeline().addBefore("packet_handler", "nef_packet_handler", new PacketHandler());
         System.out.println("Added packet handler to channel pipeline.");
+    }
+
+    @SubscribeEvent
+    public void renderPlayerInfo(final RenderGameOverlayEvent.Post event) {
+        if (event.type != RenderGameOverlayEvent.ElementType.ALL) return;
+        if (ScoreboardUtils.inDungeons) {
+            if (AutoRoom.guiToggled) {
+                AutoRoom.renderText();
+            }
+            if (AutoRoom.coordToggled) {
+                AutoRoom.renderCoord();
+            }
+        }
     }
 }

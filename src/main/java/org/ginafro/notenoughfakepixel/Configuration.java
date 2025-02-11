@@ -226,11 +226,6 @@ public class Configuration extends Config {
     @Color(name = "Stormy Color", category = DUNGEONS, subcategory = "Starred Mobs")
     public static OneColor dungeonsStormyColor = new OneColor(173, 216, 230);
 
-    @Switch(name = "Three Weirdos Solver" , category = DUNGEONS, subcategory = "Puzzles")
-    public static boolean dungeonsThreeWeirdos = true;
-    @Switch(name = "Water Solver" , category = DUNGEONS, subcategory = "Puzzles")
-    public static boolean dungeonsWaterSolver = true;
-
     @Switch(name = "Terminal Starts With Solver" , category = DUNGEONS , subcategory = "Floor 7 Terminals and Devices")
     public static boolean dungeonsTerminalStartsWithSolver = true;
     @Switch(name = "Terminal Select colors Solver" , category = DUNGEONS , subcategory = "Floor 7 Terminals and Devices")
@@ -256,8 +251,6 @@ public class Configuration extends Config {
     @Color(name = "Alternative Color", category = DUNGEONS , subcategory = "Floor 7 Terminals and Devices")
     public static OneColor dungeonsAlternativeColor = new OneColor(255,255,0);
 
-    @Switch(name = "Is Paul Active" , category = DUNGEONS, subcategory = "Score & Secrets")
-    public static boolean dungeonsIsPaul = false;
     @Switch(name = "Score Overlay" , category = DUNGEONS, subcategory = "Score & Secrets")
     public static boolean dungeonsScoreOverlay = true;
     @Switch(name = "S+ Notifier" , category = DUNGEONS, subcategory = "Score & Secrets", description = "Shows an S+ in screen + chat message when virtually reached S+ (% secrets + 100% completion).")
@@ -274,7 +267,7 @@ public class Configuration extends Config {
     public static boolean dungeonsItemSecretsBig = true;
     @Slider(name = "Item Secrets Scale" ,category = DUNGEONS , subcategory = "Score & Secrets", description = "Change the size of secret items.", min = 0.1f,max=5f)
     public static float dungeonsScaleItemDrop = 3.0f;
-    //@Switch(name = "Dungeons Secrets Waypoints" , category = DUNGEONS, subcategory = "Dungeon Secrets")
+    @Switch(name = "Dungeons Secrets Waypoints" , category = DUNGEONS, subcategory = "Dungeon Secrets")
     public static boolean dungeonsSecretsWaypoints = true;
     @Page(name = "Secret Overlay Options" , category = DUNGEONS, subcategory = "Score & Secrets", location = PageLocation.BOTTOM)
     public static ScoreOverlayPage dungeonsScoreOverlayPage = new ScoreOverlayPage();
