@@ -54,7 +54,7 @@ public class ScaleDungeonSecrets {
         if (shouldScale) {
             float scale = Configuration.dungeonsScaleItemDrop;
             GlStateManager.scale(scale, scale, scale);
-            GlStateManager.translate(0,(Configuration.dungeonsScaleItemDrop - 1f) * (entity.height/2f - 1f/16f),0);
+            GlStateManager.translate(0,(Configuration.dungeonsScaleItemDrop - 1f) * (entity.height/2f - 1.125f/16f),0);
         }
     }
 }

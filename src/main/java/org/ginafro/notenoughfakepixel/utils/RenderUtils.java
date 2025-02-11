@@ -1,6 +1,7 @@
 package org.ginafro.notenoughfakepixel.utils;
 
 import cc.polyfrost.oneconfig.libs.universal.UResolution;
+import net.minecraft.block.BlockLever;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
@@ -14,6 +15,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.inventory.Slot;
 import net.minecraft.util.*;
+import org.ginafro.notenoughfakepixel.Configuration;
 import org.ginafro.notenoughfakepixel.variables.MobDisplayTypes;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
@@ -182,6 +184,10 @@ public class RenderUtils {
     }
 
     public static void renderEntityHitbox(Entity entity, float partialTicks, Color color, MobDisplayTypes type) {
+        if (type == MobDisplayTypes.ITEMBIG) {
+            renderItemBigHitbox(entity, partialTicks, color);
+            return;
+        }
 
         Vector3f loc = new Vector3f(
                 (float) entity.posX - 0.5f,
@@ -189,9 +195,9 @@ public class RenderUtils {
                 (float) entity.posZ - 0.5f);
 
         if (type == MobDisplayTypes.BAT ||
-            type == MobDisplayTypes.ENDERMAN_BOSS ||
-            type == MobDisplayTypes.WOLF_BOSS ||
-            type == MobDisplayTypes.SPIDER_BOSS ) {
+                type == MobDisplayTypes.ENDERMAN_BOSS ||
+                type == MobDisplayTypes.WOLF_BOSS ||
+                type == MobDisplayTypes.SPIDER_BOSS) {
             GlStateManager.disableDepth();
         }
 
@@ -208,30 +214,91 @@ public class RenderUtils {
 
         double x = loc.x - playerX + 0.5;
         double y = loc.y - playerY - 0.5;
-        if (type == MobDisplayTypes.BAT){
+        if (type == MobDisplayTypes.BAT) {
             y = (loc.y - playerY) + 1;
-        } else if (type == MobDisplayTypes.FEL){
+        } else if (type == MobDisplayTypes.FEL) {
             y = loc.y - playerY + 2.3;
         }
         double z = loc.z - playerZ + 0.5;
 
-        // IF the mob is a bat make the hitbox smaller
-        double y1, y2, x1, x2, z1, z2;
+        double y1 = y + type.getY1();
+        double y2 = y + type.getY2();
+        double x1 = x + type.getX1();
+        double x2 = x + type.getX2();
+        double z1 = z + type.getZ1();
+        double z2 = z + type.getZ2();
 
-        y1 = y + type.getY1();
-        y2 = y + type.getY2();
-        x1 = x + type.getX1();
-        x2 = x + type.getX2();
-        z1 = z + type.getZ1();
-        z2 = z + type.getZ2();
+        drawHitbox(x1, x2, y1, y2, z1, z2, color, type);
 
+        GlStateManager.enableDepth();
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
+    }
+
+    private static void renderItemBigHitbox(Entity entity, float partialTicks, Color color) {
+        AxisAlignedBB bb = entity.getEntityBoundingBox();
+        if (bb == null) return;
+
+        double scale = Configuration.dungeonsScaleItemDrop;
+
+        Entity player = mc.getRenderViewEntity();
+        double playerX = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
+        double playerY = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
+        double playerZ = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
+
+        // Compute original box coordinates relative to player
+        double x1 = bb.minX - playerX;
+        double x2 = bb.maxX - playerX;
+        double y1 = bb.minY - playerY;
+        double y2 = bb.maxY - playerY;
+        double z1 = bb.minZ - playerZ;
+        double z2 = bb.maxZ - playerZ;
+
+        // Compute the center of the bounding box
+        double centerX = (x1 + x2) / 2;
+        double centerY = (y1 + y2) / 2;
+        double centerZ = (z1 + z2) / 2;
+
+        // Scale bounding box relative to center
+        x1 = centerX + (x1 - centerX) * scale;
+        x2 = centerX + (x2 - centerX) * scale;
+        y1 = centerY + (y1 - centerY) * scale;
+        y2 = centerY + (y2 - centerY) * scale;
+        z1 = centerZ + (z1 - centerZ) * scale;
+        z2 = centerZ + (z2 - centerZ) * scale;
+
+        double yOffset = (Configuration.dungeonsScaleItemDrop - 1f) * (entity.height/2f);
+        y1 += yOffset;
+        y2 += yOffset;
+
+        GlStateManager.pushMatrix();
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableCull();
+        GlStateManager.disableLighting();
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+
+        drawHitbox(x1, x2, y1, y2, z1, z2, color, MobDisplayTypes.ITEMBIG);
+
+        GlStateManager.enableDepth();
+        GlStateManager.enableLighting();
+        GlStateManager.enableCull();
+        GlStateManager.enableTexture2D();
+        GlStateManager.popMatrix();
+    }
+
+
+
+    private static void drawHitbox(double x1, double x2, double y1, double y2, double z1, double z2, Color color, MobDisplayTypes type) {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
         worldRenderer.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION_COLOR);
-        GL11.glLineWidth(3.0f);
 
         if (type == MobDisplayTypes.GAIA) {
             GL11.glLineWidth(5.0f);
+        } else {
+            GL11.glLineWidth(3.0f);
         }
 
         int red = color.getRed();
@@ -258,12 +325,8 @@ public class RenderUtils {
         }
 
         tessellator.draw();
-        GlStateManager.enableDepth();
-        GlStateManager.enableLighting();
-        GlStateManager.enableCull();
-        GlStateManager.enableTexture2D();
-        GlStateManager.popMatrix();
     }
+
 
     public static void drawTag(String str, double[] pos, Color color, float partialTicks) {
         FontRenderer fontrenderer = Minecraft.getMinecraft().fontRendererObj;
@@ -388,7 +451,7 @@ public class RenderUtils {
         draw3DLine(pos1, pos2, color, lineWidth, depth, partialTicks, false, false, null);
     }
 
-    public static void draw3DLine(Vec3 pos1, Vec3 pos2, Color color, int lineWidth, boolean depth, float partialTicks, boolean fromHead, boolean isLever, EnumFacing facing) {
+    public static void draw3DLine(Vec3 pos1, Vec3 pos2, Color color, int lineWidth, boolean depth, float partialTicks, boolean fromHead, boolean isLever, BlockLever.EnumOrientation orientation) {
         Entity render = Minecraft.getMinecraft().getRenderViewEntity();
         WorldRenderer worldRenderer = Tessellator.getInstance().getWorldRenderer();
 
@@ -410,9 +473,19 @@ public class RenderUtils {
         }
         Vec3 pos1final = pos1;
         Vec3 pos2final = pos2;
-        if (isLever && facing != null) {
+        if (isLever && orientation != null) {
             double midX = 0,midY=0,midZ=0;
-            switch (facing) {
+            switch (orientation) {
+                case UP_X:
+                    midX = pos1final.xCoord + 0.5;
+                    midY = pos1final.yCoord + 0.1;
+                    midZ = pos1final.zCoord + 0.5;
+                    break;
+                case UP_Z:
+                    midX = pos1final.xCoord + 0.5;
+                    midY = pos1final.yCoord + 0.1;
+                    midZ = pos1final.zCoord + 0.5;
+                    break;
                 case NORTH:
                     midX = pos1final.xCoord + (0.25 + 0.75) / 2;
                     midY = pos1final.yCoord + (0.1875 + 0.8125) / 2;

@@ -1,6 +1,8 @@
 package org.ginafro.notenoughfakepixel.features.skyblock.diana;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraft.network.play.server.S2APacketParticles;
 import net.minecraft.util.BlockPos;
 import org.ginafro.notenoughfakepixel.Configuration;
@@ -9,6 +11,7 @@ import org.ginafro.notenoughfakepixel.utils.Waypoint;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ParticleProcessor {
     String waypointSound = "random.pop";
@@ -124,8 +127,13 @@ public class ParticleProcessor {
         particleMagicCritQueue.clear();
         particleDripLavaQueue.clear();
 
+        Waypoint waypoint = classifyGroup(combinedParticles);
+
+        // Check if dev pet is close
+        if (isDevPetClose(waypoint.getCoordinates())) return  null;
+
         // Calculate the average position and classify the group
-        return classifyGroup(combinedParticles);
+        return waypoint;
     }
 
     private Queue<S2APacketParticles> getLargestQueue() {
@@ -184,9 +192,9 @@ public class ParticleProcessor {
     private boolean isDuplicateResult(Waypoint result) {
         if (result == null) return false;
         try {
-            for (Waypoint processedResult : waypoints) {
-                if (processedResult == null) continue;
-                if (areCoordinatesClose(processedResult.getCoordinates(), result.getCoordinates(), distanceThreshold)) {
+            for (Waypoint waypoint : waypoints) {
+                if (waypoint == null) continue;
+                if (areCoordinatesClose(waypoint.getCoordinates(), result.getCoordinates(), distanceThreshold)) {
                     return true;
                 }
             }
@@ -247,5 +255,20 @@ public class ParticleProcessor {
         return result;
     }
 
+    private boolean isDevPetClose(int[] cords) {
+        boolean found = false;
+        for (Entity entity : Minecraft.getMinecraft().theWorld.loadedEntityList) {
+            if (entity == null) continue;
+            if (entity.getName() == null) continue;
+            if (entity instanceof EntityArmorStand) {
+                if (!entity.getName().contains("Developer's Pet")) continue;
+                if (getDistance(cords, new int[]{entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ()}) <= 5) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        return found;
+    }
 
 }

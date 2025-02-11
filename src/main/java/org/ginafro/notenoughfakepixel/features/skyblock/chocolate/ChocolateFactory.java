@@ -53,6 +53,7 @@ public class ChocolateFactory {
         if (!Configuration.chocolateChocolateEggWaypoints) return;
         checkForEggs();
         drawWaypoints(event.partialTicks);
+        drawTags(event.partialTicks);
     }
 
     @SubscribeEvent()
@@ -164,6 +165,16 @@ public class ChocolateFactory {
             ).expand(0.01f, 0.01f, 0.01f);
             GlStateManager.disableCull();
             RenderUtils.drawFilledBoundingBox(bb, 1f, colorDrawWaypoint);
+            GlStateManager.enableCull();
+            GlStateManager.enableTexture2D();
+        }
+    }
+
+    private void drawTags(float partialTicks) {
+        for (Waypoint waypoint : waypoints) {
+            if (waypoint == null || waypoint.isHidden()) continue;
+            GlStateManager.disableCull();
+            RenderUtils.drawTag("Egg",new double[]{waypoint.getCoordinates()[0],waypoint.getCoordinates()[1],waypoint.getCoordinates()[2]},Color.WHITE, partialTicks);
             GlStateManager.enableCull();
             GlStateManager.enableTexture2D();
         }

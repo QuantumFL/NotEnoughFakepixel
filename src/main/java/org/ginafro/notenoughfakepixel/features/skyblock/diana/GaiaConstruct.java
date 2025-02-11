@@ -51,9 +51,9 @@ public class GaiaConstruct {
         } else if (entityLivingBase.getHealth()/maxHp < 0.33) {
             this.state = 2;
         }
-        if (previousState != this.state) {
-            System.out.println("State changed to " + this.state);
-        }
+        //if (previousState != this.state) {
+            //System.out.println("State changed to " + this.state);
+        //}
     }
 
     public int getHits() {

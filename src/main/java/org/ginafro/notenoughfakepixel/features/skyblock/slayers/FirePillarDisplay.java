@@ -6,6 +6,8 @@ import net.minecraft.entity.item.EntityArmorStand;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.ginafro.notenoughfakepixel.Configuration;
+import org.ginafro.notenoughfakepixel.utils.ScoreboardUtils;
+import org.ginafro.notenoughfakepixel.variables.Location;
 
 public class FirePillarDisplay {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -15,6 +17,8 @@ public class FirePillarDisplay {
     @SubscribeEvent
     public void onRenderLiving(RenderLivingEvent.Pre<EntityLivingBase> event) {
         if (!Configuration.slayerFirePillarDisplay || mc.theWorld == null) return;
+        if (!ScoreboardUtils.currentGamemode.isSkyblock()) return;
+        if (!ScoreboardUtils.currentLocation.isCrimson()) return;
 
         // check armor stands every 5 ticks to reduce load
         if (mc.theWorld.getTotalWorldTime() % 5 != 0) return;
@@ -52,7 +56,6 @@ public class FirePillarDisplay {
     private void updatePillarDisplay(String cleanName) {
 
         int seconds = Integer.parseInt(cleanName.split(" ")[0].replace("s", ""));
-
 
         mc.ingameGUI.displayTitle(
                 trackedPillar.getDisplayName().getFormattedText(),

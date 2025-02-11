@@ -1,9 +1,9 @@
 package org.ginafro.notenoughfakepixel.features.skyblock.dungeons.score;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.ginafro.notenoughfakepixel.Configuration;
 import org.ginafro.notenoughfakepixel.features.skyblock.dungeons.DungeonManager;
 import org.ginafro.notenoughfakepixel.utils.ScoreboardUtils;
@@ -12,12 +12,19 @@ import org.ginafro.notenoughfakepixel.variables.DungeonFloor;
 
 public class ScoreManager {
     static int failedPuzzles = 0;
+    public static int currentSeconds = -1;
+    private static int reducedPenalty = 0;
 
     @SubscribeEvent
     public void onChatReceived(ClientChatReceivedEvent event) {
         if (!DungeonManager.checkEssentials()) return;
         if (event.message.getUnformattedText().contains("PUZZLE FAIL!")) {
             failedPuzzles++;
+        } else if (event.message.getUnformattedText().equals("Your Spirit Pet reduced your death score penalty to 1!")) {
+            reducedPenalty = 1;
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("/pc [NEF] I died with Spirit Pet, so my kill doesn't count");
+        }  else if (event.message.getUnformattedText().contains("[NEF] I died with Spirit Pet, so my kill doesn't count")) {
+            reducedPenalty = 1;
         }
     }
 
@@ -29,11 +36,17 @@ public class ScoreManager {
 
     private void reset() {
         failedPuzzles = 0;
+        currentSeconds = -1;
+        reducedPenalty = 0;
+    }
+
+    public static int getTotalScore() {
+        return getSkillScore() + getExplorationScore() + getSpeedScore() + getBonusScore();
     }
 
     public static int getSkillScore() {
         int deaths = TablistParser.deaths;
-        return Math.max(100 - deaths * 2 - failedPuzzles * 14, 0);
+        return Math.max(Math.min(100 - (deaths-reducedPenalty) * 2 - failedPuzzles * 14, 100), 0);
     }
 
     public static int getExplorationClearScore() {
@@ -53,7 +66,7 @@ public class ScoreManager {
 
     public static int getSpeedScore() {
         String currentTimeString = TablistParser.time;
-        int currentSeconds = convertToSeconds(currentTimeString);
+        currentSeconds = convertToSeconds(currentTimeString);
         if (currentSeconds == -1) {
             return 100;
         }

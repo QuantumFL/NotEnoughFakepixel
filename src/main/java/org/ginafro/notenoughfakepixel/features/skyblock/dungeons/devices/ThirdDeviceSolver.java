@@ -65,10 +65,19 @@ public class ThirdDeviceSolver {
                 ItemStack item = itemFrame.getDisplayedItem();
 
                 if (item != null && item.getItem() == Items.arrow) {
-                    BlockPos blockPos = getBlockUnderItemFrame(itemFrame);
+                    BlockPos posItemFrame = new BlockPos(entityHit.getPosition().getX(),entityHit.getPosition().getY(),entityHit.getPosition().getZ());
+                    if (itemFramesRotations.containsKey(posItemFrame)) {
+                        int desiredRotation = itemFramesRotations.get(posItemFrame);
+                        int currentRotation = itemFrame.getRotation();
+                        int clicksNeeded = (desiredRotation - currentRotation + 8) % 8;
+                        if (clicksNeeded == 0) {
+                            event.setCanceled(true);
+                        }
+                    }
+                    /*BlockPos blockPos = getBlockUnderItemFrame(itemFrame);
                     if (mc.theWorld.getBlockState(blockPos).getBlock() == Blocks.sea_lantern) {
                         event.setCanceled(true);
-                    }
+                    }*/
                 }
             }
         }
@@ -77,8 +86,7 @@ public class ThirdDeviceSolver {
     @SubscribeEvent
     public void onRenderLast(RenderWorldLastEvent event) {
         if (!Configuration.dungeonsThirdDeviceSolver) return;
-        if (!ScoreboardUtils.currentGamemode.isSkyblock()) return;
-        if (!ScoreboardUtils.currentLocation.isDungeon()) return;
+        if (!DungeonManager.checkEssentialsF7()) return;
 
         mc.theWorld.loadedEntityList.forEach(entity -> {
             if (entity instanceof EntityItemFrame) {
@@ -91,7 +99,7 @@ public class ThirdDeviceSolver {
                 // Determine block color
                 Color color = mc.theWorld.getBlockState(pos).getBlock() instanceof BlockSeaLantern
                         ? new Color(Configuration.dungeonsCorrectColor.getRed(), Configuration.dungeonsCorrectColor.getGreen(), Configuration.dungeonsCorrectColor.getBlue(), 150)
-                        : new Color(Configuration.dungeonsAlternativeColor.getRed(), Configuration.dungeonsAlternativeColor.getGreen(), Configuration.dungeonsAlternativeColor.getBlue(), 200);
+                        : new Color(Configuration.dungeonsAlternativeColor.getRed(), Configuration.dungeonsAlternativeColor.getGreen(), Configuration.dungeonsAlternativeColor.getBlue(), 150);
 
                 // Highlight the block
                 RenderUtils.highlightBlock(pos, color, false, event.partialTicks);

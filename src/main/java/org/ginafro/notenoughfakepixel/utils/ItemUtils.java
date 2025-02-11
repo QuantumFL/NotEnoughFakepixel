@@ -1,8 +1,10 @@
 package org.ginafro.notenoughfakepixel.utils;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import org.jetbrains.annotations.NotNull;
 import java.util.regex.Pattern;
 
@@ -42,6 +44,17 @@ public class ItemUtils {
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         is.setTagCompound(nbtTagCompound);
         return nbtTagCompound;
+    }
+
+    public static void addLoreLine(ItemStack item, String line){
+        if(!item.hasTagCompound()) return;
+        if(!item.getTagCompound().hasKey("display")) return;
+        if(!item.getTagCompound().getCompoundTag("display").hasKey("Lore")) return;
+
+        NBTTagCompound displayTag = item.getTagCompound().getCompoundTag("display");
+        NBTTagList lore = displayTag.getTagList("Lore", 8);
+
+        lore.appendTag(new NBTTagString(line));
     }
 
     public static String getLoreLine(ItemStack item, String matcher){

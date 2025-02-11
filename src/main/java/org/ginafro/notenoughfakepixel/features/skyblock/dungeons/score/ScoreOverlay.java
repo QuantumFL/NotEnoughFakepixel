@@ -52,7 +52,9 @@ public class ScoreOverlay extends TextHud {
     }
 
     private String getRankingDisplay() {
-        int totalScore = ScoreManager.getSkillScore() + ScoreManager.getExplorationScore() + ScoreManager.getSpeedScore() + ScoreManager.getBonusScore();
+        int totalScore = ScoreManager.getTotalScore();
+        if (DungeonManager.isFinalStage() && ScoreManager.getExplorationClearScore() != 60) return EnumChatFormatting.RED + "UNKNOWN SCORE";
+        //if (DungeonManager.isFinalStage() && ) totalScore = (int) (0.7 * ScoreManager.getTotalScore());
         String returnString = "\u00a77Total score: ";
         if (totalScore < 100) returnString = returnString + EnumChatFormatting.RED + totalScore + EnumChatFormatting.RED + " (D)";
         else if (totalScore < 160) returnString = returnString + EnumChatFormatting.RED + totalScore + EnumChatFormatting.BLUE + " (C)";
@@ -65,6 +67,8 @@ public class ScoreOverlay extends TextHud {
 
     private String getVirtualRankingDisplay() {
         int virtualScore = ScoreManager.getSkillScore() + 60 + ScoreManager.getExplorationSecretScore() + ScoreManager.getSpeedScore() + ScoreManager.getBonusScore();
+        if (DungeonManager.isFinalStage() && ScoreManager.getExplorationClearScore() != 60) return "";
+        if (ScoreManager.getExplorationClearScore() == 60) return "";
         String returnString = "\u00a77Virtual score: ";
         if (virtualScore < 100) returnString = returnString + EnumChatFormatting.RED + virtualScore + EnumChatFormatting.RED + " (D)";
         else if (virtualScore < 160) returnString = returnString + EnumChatFormatting.RED + virtualScore + EnumChatFormatting.BLUE + " (C)";
@@ -77,6 +81,7 @@ public class ScoreOverlay extends TextHud {
 
     private String getSkillDisplay() {
         EnumChatFormatting enumChatFormatting;
+        if (DungeonManager.isFinalStage() && ScoreManager.getExplorationClearScore() != 60) return "\u00a77Exploration: " + EnumChatFormatting.RED + "Not all puzzles done";
         int skillScore = ScoreManager.getSkillScore();
         if (skillScore == 100) enumChatFormatting = EnumChatFormatting.GREEN;
         else if (skillScore >= 94) enumChatFormatting = EnumChatFormatting.YELLOW;
@@ -118,13 +123,13 @@ public class ScoreOverlay extends TextHud {
         int requiredSecretNeeded = ScoreManager.getRequiredSecretNeeded();
         int secretRequirement = DungeonFloor.getFloor(ScoreboardUtils.currentFloor.name()).getSecretPercentage();
 
-        returnString.append(secretPercentage == 0 ? "\u00a7c0% / " :
-                (secretPercentage >= requiredSecretNeeded ? "\u00a7a" : "\u00a7c") + secretPercentage + "% / ");
+        returnString.append(secretPercentage == 0 ? "\u00a7c0% \u00a77/ " :
+                (secretPercentage >= requiredSecretNeeded && requiredSecretNeeded != -1 ? "\u00a7a" : "\u00a7c") + secretPercentage + "% \u00a77/ ");
 
         if (requiredSecretNeeded == -1) {
             return returnString + "\u00a7c S+ UNREACHABLE!";
         }
-        returnString.append(secretPercentage >= requiredSecretNeeded ? "\u00a7a" : "\u00a7c").append(requiredSecretNeeded).append("% / ");
+        returnString.append(secretPercentage >= requiredSecretNeeded ? "\u00a7a" : "\u00a7c").append(requiredSecretNeeded).append("% \u00a77/ ");
 
         returnString.append(secretRequirement == 0 ? "\u00a7c?%" :
                 (secretPercentage >= requiredSecretNeeded ? "\u00a7a" : "\u00a7c") + secretRequirement + "%");
@@ -139,18 +144,23 @@ public class ScoreOverlay extends TextHud {
         if (!Configuration.isPojav()) return;
         if (!DungeonManager.checkEssentials()) return;
 
+        if (ScoreManager.currentSeconds > 0 && ScoreManager.currentSeconds <= 8) {
+            readyTime = System.currentTimeMillis() + (chatDisplaySeconds * 1000L); // Reset the timer on dungeon load
+        }
+
         long currentTime = System.currentTimeMillis();
         if (currentTime >= readyTime) {
-            readyTime = currentTime + (chatDisplaySeconds * 1000); // Schedule the next announcement
+            readyTime = currentTime + (chatDisplaySeconds * 1000L); // Schedule the next announcement
 
             ChatUtils.notifyChat(EnumChatFormatting.WHITE + "----- Dungeon Report -----");
+            ChatUtils.notifyChat(getRankingDisplay());
+            ChatUtils.notifyChat(getVirtualRankingDisplay());
+            ChatUtils.notifyChat("");
             ChatUtils.notifyChat(getSkillDisplay());
             ChatUtils.notifyChat(getExplorationDisplay());
             ChatUtils.notifyChat(getSpeedDisplay());
             ChatUtils.notifyChat(getBonusDisplay());
             ChatUtils.notifyChat("");
-            ChatUtils.notifyChat(getRankingDisplay());
-            ChatUtils.notifyChat(getVirtualRankingDisplay());
             ChatUtils.notifyChat(getSecretDisplay());
         }
     }

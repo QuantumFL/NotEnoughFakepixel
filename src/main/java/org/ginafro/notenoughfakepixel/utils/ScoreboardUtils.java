@@ -149,7 +149,7 @@ public class ScoreboardUtils {
 
     public static int getHubNumber() {
         if (Minecraft.getMinecraft().getNetHandler() != null) {
-            System.out.println("Point 1 reached");
+            //System.out.println("Point 1 reached");
             for (NetworkPlayerInfo playerInfo : Minecraft.getMinecraft().getNetHandler().getPlayerInfoMap()) {
                 IChatComponent s1 = playerInfo.getDisplayName();
                 if (s1 != null) {

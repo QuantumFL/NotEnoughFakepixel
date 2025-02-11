@@ -281,7 +281,6 @@ public class NefCommand extends CommandBase {
         sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Configuration changed to default"));
         // QOL
         Configuration._qol = true;
-        //Configuration.qolCustomFilters = true;
         Configuration.qolDisableHyperionExplosions = true;
         Configuration.qolDisableThunderlordBolt = true;
         Configuration.qolFullbright = true;
@@ -306,6 +305,9 @@ public class NefCommand extends CommandBase {
         Configuration.qolDisableMidaStaffAnimation = false;
         Configuration.qolDmgCommas = true;
         Configuration.qolDmgFormatter = true;
+        Configuration.qolDisableEnderManTeleport = true;
+        Configuration.qolVisualCooldowns = true;
+        Configuration.qolItemRarity = true;
         // Dungeons
         Configuration._dungeons = true;
         Configuration.dungeonsAutoReady = true;
@@ -320,7 +322,7 @@ public class NefCommand extends CommandBase {
         Configuration.dungeonsTerminalSelectColorsSolver = true;
         Configuration.dungeonsScoreOverlay = true;
         Configuration.dungeonsSPlusNotifier = true;
-        Configuration.dungeonsMuteBosses = true;
+        Configuration.dungeonsMuteIrrelevantMessages = true;
         Configuration.dungeonsStarredMobsEsp = true;
         Configuration.dungeonsRotateMap = true;
         Configuration.dungeonsTerminalMazeSolver = true;
@@ -332,6 +334,12 @@ public class NefCommand extends CommandBase {
         Configuration.dungeonsThirdDeviceSolver = true;
         Configuration.dungeonsItemSecretsDisplay = true;
         Configuration.dungeonsItemSecretsBig = true;
+        Configuration.dungeonsIsPaul = true;
+        Configuration.dungeonsKeyTracers = true;
+        Configuration.dungeonsSalvageItemsPrevention = true;
+        Configuration.dungeonsClearedNotifier = true;
+        Configuration.dungeonsSPlusMessage = true;
+        Configuration.dungeonsWaterSolver = true;
         // Fishing
         Configuration._fishing = true;
         Configuration.fishingLegendaryCreatures = true;
@@ -352,11 +360,14 @@ public class NefCommand extends CommandBase {
         Configuration.slayerMinibosses = true;
         Configuration.slayerBosses = true;
         Configuration.slayerShowBeaconPath = true;
+        Configuration.slayerFirePillarDisplay = true;
+
         // Experimentation Table
         Configuration._experimentation = true;
         Configuration.experimentationChronomatronSolver = true;
         Configuration.experimentationUltraSequencerSolver = true;
         Configuration.experimentationPreventMissclicks = true;
+        Configuration.experimentationHideTooltips = true;
         // Chocolate Factory
         Configuration.chocolateChocolateShowBestUpgrade = true;
         Configuration.chocolateChocolateEggWaypoints = true;

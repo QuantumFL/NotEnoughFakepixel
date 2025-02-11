@@ -23,11 +23,14 @@ public class DungeonClearedNotifier {
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent e) {
-        if (!DungeonManager.checkEssentials() ||
+        if (!Configuration.dungeonsClearedNotifier ||
+                !DungeonManager.checkEssentials() ||
                 e.phase == TickEvent.Phase.END ||
                 Minecraft.getMinecraft().thePlayer == null ||
-                Minecraft.getMinecraft().theWorld == null ||
-                !Configuration.dungeonsClearedNotifier) return;
+                Minecraft.getMinecraft().theWorld == null) return;
+        if (ScoreManager.currentSeconds > 0 && ScoreManager.currentSeconds <= 8) {
+            reminded = false;
+        }
         reminder();
     }
 

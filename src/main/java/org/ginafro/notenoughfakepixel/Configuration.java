@@ -170,14 +170,20 @@ public class Configuration extends Config {
     @Header(text = "Dungeons", category = DUNGEONS, size = 2)
     public static boolean _dungeons = true;
 
+    @Switch(name = "Is Paul Active" , category = DUNGEONS, subcategory = "QOL", description = "Check/uncheck this if Paul is active as mayor with EZPZ perk. Needed for correct score calculation.")
+    public static boolean dungeonsIsPaul = false;
+    @Switch(name = "Auto Close Chests", category = DUNGEONS, subcategory = "QOL", description = "Automatically closes chests in dungeons.")
+    public static boolean dungeonsAutoCloseChests = true;
     @Switch(name = "Auto Ready Dungeon" , category = DUNGEONS, subcategory = "QOL", description = "Automatically ready up in dungeons.")
     public static boolean dungeonsAutoReady = true;
     @Text(name = "Auto Ready Name (if nicked)" , category = DUNGEONS, subcategory = "QOL", description = "The name this will search for when you are nicked")
     public static String dungeonsAutoReadyName = "your nicked name";
-    @Switch(name = "Auto Close Chests", category = DUNGEONS, subcategory = "QOL", description = "Automatically closes chests in dungeons.")
-    public static boolean dungeonsAutoCloseChests = true;
-    @Switch(name = "Mute Bosses", category = DUNGEONS, subcategory = "QOL", description = "Mutes bosses on chat.")
-    public static boolean dungeonsMuteBosses = true;
+    @Switch(name = "Wither&Blood Keys Tracers", category = DUNGEONS, subcategory = "QOL", description = "Show tracer on wither and blood keys.")
+    public static boolean dungeonsKeyTracers = true;
+    @Switch(name = "Mute Irrelevant Messages", category = DUNGEONS, subcategory = "QOL", description = "Mutes bosses and crowd dialogs on chat.")
+    public static boolean dungeonsMuteIrrelevantMessages = true;
+    @Switch(name = "Salvage Items Saver", category = DUNGEONS, subcategory = "QOL", description = "Prevents you from salvaging legendary+ items.")
+    public static boolean dungeonsSalvageItemsPrevention = true;
 
     @Switch(name = "Dungeons Map" , category = DUNGEONS, subcategory = "Dungeon Map")
     public static boolean dungeonsMap = true;
@@ -192,7 +198,10 @@ public class Configuration extends Config {
     @Switch(name = "Dungeons Map Rotation" , category = DUNGEONS, subcategory = "Dungeon Map")
     public static boolean dungeonsRotateMap = true;
 
-
+    @Switch(name = "Three Weirdos Solver" , category = DUNGEONS, subcategory = "Puzzles")
+    public static boolean dungeonsThreeWeirdos = true;
+    @Switch(name = "Water Solver" , category = DUNGEONS, subcategory = "Puzzles")
+    public static boolean dungeonsWaterSolver = true;
 
     @Switch(name = "Fel Mobs Display" , category = DUNGEONS, subcategory = "Starred Mobs")
     public static boolean dungeonsFelMob = true;
@@ -331,7 +340,7 @@ public class Configuration extends Config {
     public static boolean slayerShowBeaconPath = true;
     @Color(name = "Beacon Color", category = SLAYER , subcategory = "Voidgloom Seraph", description = "Color of the beacon's waypoint.")
     public static OneColor slayerBeaconColor = new OneColor(128, 0, 128);
-    @Switch(name = "Blaze Fire Pillar" , category = SLAYER , subcategory = "Inferno Demonlord", description = "Displays a text on the screen when a pillar is nearby.")
+    @Switch(name = "Display Pillar Title" , category = SLAYER , subcategory = "Inferno Demonlord", description = "Displays a text on the screen when a pillar is nearby.")
     public static boolean slayerFirePillarDisplay = true;
 
     // Enchanting
@@ -341,18 +350,22 @@ public class Configuration extends Config {
     public static boolean experimentationChronomatronSolver = true;
     @Switch(name = "Ultrasequencer solver" , category = EXPERIMENTATION, description = "Enables Ultrasequencer solver.")
     public static boolean experimentationUltraSequencerSolver = true;
+    @Switch(name = "Hide Tooltips" , category = EXPERIMENTATION, description = "Hide tooltips when doing experiments.")
+    public static boolean experimentationHideTooltips = true;
+    //@Switch(name = "Superpairs solver" , category = EXPERIMENTATION, description = "Enables Superpairs solver.")
+    //public static boolean experimentationSuperpairsSolver = true;
     @Switch(name = "Prevent missclicks" , category = EXPERIMENTATION, description = "IMPORTANT: this feature doesn't work properly if your connection isn't stable or server has lag. Prevents clicking wrong answers when doing experiments.")
     public static boolean experimentationPreventMissclicks = true;
 
     // Chocolate Factory
     @Header(text = CHOCOLATEFACTORY , category = CHOCOLATEFACTORY , size = 2)
     public static boolean _chocolate = true;
-    @Switch(name = "Show Best Upgrade" , category = CHOCOLATEFACTORY, subcategory = "Chocolate Factory")
-    public static boolean chocolateChocolateShowBestUpgrade = true;
-    @Switch(name = "Show Waypoints on Chocolate Eggs" , category = CHOCOLATEFACTORY, subcategory = "Chocolate Factory", description = "Show waypoints on chocolate eggs on Hoppity's Hunt event.")
+    @Switch(name = "Show Waypoints on Chocolate Eggs" , category = CHOCOLATEFACTORY, description = "Show waypoints on chocolate eggs on Hoppity's Hunt event.")
     public static boolean chocolateChocolateEggWaypoints = true;
-    @Color(name = "Chocolate Eggs Waypoints Color", category = CHOCOLATEFACTORY , subcategory = "Chocolate Factory", description = "Color of chocolate eggs' waypoints.")
+    @Color(name = "Chocolate Eggs Waypoints Color", category = CHOCOLATEFACTORY, description = "Color of chocolate eggs' waypoints.")
     public static OneColor chocolateChocolateEggWaypointsColor = new OneColor(210,105,30);
+    @Switch(name = "Show Best Upgrade" , category = CHOCOLATEFACTORY)
+    public static boolean chocolateChocolateShowBestUpgrade = true;
 
     // Crimson
     @Header(text = CRIMSON, category = CRIMSON, size = 2)

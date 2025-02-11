@@ -33,6 +33,8 @@ import org.ginafro.notenoughfakepixel.features.skyblock.dungeons.score.ScoreOver
 import org.ginafro.notenoughfakepixel.features.skyblock.dungeons.score.SPlusNotifier;
 import org.ginafro.notenoughfakepixel.features.skyblock.dungeons.terminals.*;
 import org.ginafro.notenoughfakepixel.features.skyblock.enchanting.EnchantingSolvers;
+import org.ginafro.notenoughfakepixel.features.skyblock.enchanting.HideEnchantingTooltips;
+import org.ginafro.notenoughfakepixel.features.skyblock.enchanting.PreventMissclicks;
 import org.ginafro.notenoughfakepixel.features.skyblock.fishing.GreatCatchNotifier;
 import org.ginafro.notenoughfakepixel.features.skyblock.mining.*;
 import org.ginafro.notenoughfakepixel.features.skyblock.overlays.StorageOverlay;
@@ -68,6 +70,9 @@ public class NotEnoughFakepixel {
 
         //MinecraftForge.EVENT_BUS.register(new Testing());
 
+        MinecraftForge.EVENT_BUS.register(new WelcomeMessage());
+        MinecraftForge.EVENT_BUS.register(new SalvageItemsSaver());
+
         MinecraftForge.EVENT_BUS.register(new StartingWithSolver());
         MinecraftForge.EVENT_BUS.register(new ClickOnColorsSolver());
         MinecraftForge.EVENT_BUS.register(new ClickInOrderSolver());
@@ -83,16 +88,18 @@ public class NotEnoughFakepixel {
         MinecraftForge.EVENT_BUS.register(new ThreeWeirdos());
         MinecraftForge.EVENT_BUS.register(new WaterSolver());
 
+        MinecraftForge.EVENT_BUS.register(new WitherBloodKeysTracers());
         MinecraftForge.EVENT_BUS.register(new StarredMobDisplay());
         MinecraftForge.EVENT_BUS.register(new BatMobDisplay());
         MinecraftForge.EVENT_BUS.register(new FelMobDisplay());
         MinecraftForge.EVENT_BUS.register(new ItemSecretsDisplay());
-        MinecraftForge.EVENT_BUS.register(new MuteBosses());
 
+        MinecraftForge.EVENT_BUS.register(new DungeonManager());
         MinecraftForge.EVENT_BUS.register(new ScoreManager());
         MinecraftForge.EVENT_BUS.register(new ScoreOverlay());
         MinecraftForge.EVENT_BUS.register(new SPlusNotifier());
         MinecraftForge.EVENT_BUS.register(new DungeonClearedNotifier());
+        MinecraftForge.EVENT_BUS.register(new MuteIrrelevantMessages());
 
         // Mining
         MinecraftForge.EVENT_BUS.register(new MiningOverlay());
@@ -106,6 +113,10 @@ public class NotEnoughFakepixel {
         MinecraftForge.EVENT_BUS.register(new GreatCatchNotifier());
         // Enchanting
         MinecraftForge.EVENT_BUS.register(new EnchantingSolvers());
+        //MinecraftForge.EVENT_BUS.register(new SuperpairsSolver());
+        MinecraftForge.EVENT_BUS.register(new HideEnchantingTooltips());
+        MinecraftForge.EVENT_BUS.register(new PreventMissclicks());
+
         // Chocolate Factory
         MinecraftForge.EVENT_BUS.register(new ChocolateFactory());
         // QOL

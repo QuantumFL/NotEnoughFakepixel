@@ -10,30 +10,8 @@ import org.ginafro.notenoughfakepixel.features.skyblock.dungeons.DungeonManager;
 
 public class SPlusNotifier {
 
-    private static boolean reminded = true;
-
-    public static void reminder() {
-        if (reminded) return;
-        if (!Configuration.dungeonsSPlusNotifier && !Configuration.dungeonsSPlusMessage) return;
-
-        if (ScoreManager.getRequiredSecretNeeded() == -1) {
-            if (Configuration.dungeonsSPlusMessage) {
-                Minecraft.getMinecraft().thePlayer.sendChatMessage("/pc [NEF] S+ cannot be reached, restart");
-            }
-            reminded = true;
-            return;
-        }
-
-        if (ScoreManager.getSecretPercentage() >= ScoreManager.getRequiredSecretNeeded()) {
-            if (Configuration.dungeonsSPlusNotifier) {
-                Minecraft.getMinecraft().ingameGUI.displayTitle(EnumChatFormatting.GOLD + "S+", "", 2, 100, 2);
-            }
-            if (Configuration.dungeonsSPlusMessage) {
-                Minecraft.getMinecraft().thePlayer.sendChatMessage("/pc [NEF] S+ virtually reached, get 100% completion and enter portal!");
-            }
-            reminded = true;
-        }
-    }
+    private static boolean remindedSPlus = true;
+    private static boolean remindedUnreachable = true;
 
     @SubscribeEvent
     public void onTick(TickEvent.ClientTickEvent e) {
@@ -41,15 +19,39 @@ public class SPlusNotifier {
                 e.phase == TickEvent.Phase.END ||
                 Minecraft.getMinecraft().thePlayer == null ||
                 Minecraft.getMinecraft().theWorld == null) return;
-        reminder();
+        if (ScoreManager.currentSeconds > 0 && ScoreManager.currentSeconds <= 8) {
+            remindedSPlus = false;
+            remindedUnreachable = false;
+        }
+        reminderSPlus();
+        reminderUnreachable();
     }
 
-    @SubscribeEvent
-    public void onChatReceived(ClientChatReceivedEvent event) {
-        if (DungeonManager.checkEssentials()) {
-            if (event.message.getUnformattedText().equals("[NPC] Mort: Good luck.")) {
-                reminded = false;
+    public static void reminderSPlus() {
+        if (remindedSPlus) return;
+        if (!Configuration.dungeonsSPlusNotifier && !Configuration.dungeonsSPlusMessage) return;
+
+        if (ScoreManager.getSecretPercentage() >= ScoreManager.getRequiredSecretNeeded() && ScoreManager.getRequiredSecretNeeded() != -1) {
+            if (Configuration.dungeonsSPlusNotifier) {
+                Minecraft.getMinecraft().ingameGUI.displayTitle(EnumChatFormatting.GOLD + "S+", "", 2, 100, 2);
             }
+            if (Configuration.dungeonsSPlusMessage) {
+                Minecraft.getMinecraft().thePlayer.sendChatMessage("/pc [NEF] S+ virtually reached, get 100% completion and enter portal!");
+            }
+            remindedSPlus = true;
+        }
+    }
+
+    public void reminderUnreachable() {
+        if (remindedUnreachable) return;
+        if (!Configuration.dungeonsSPlusNotifier && !Configuration.dungeonsSPlusMessage) return;
+
+        if (ScoreManager.getRequiredSecretNeeded() == -1) {
+            if (Configuration.dungeonsSPlusMessage) {
+                Minecraft.getMinecraft().thePlayer.sendChatMessage("/pc [NEF] S+ may not be reached by secrets only, do crypts or restart");
+            }
+            remindedUnreachable = true;
+            return;
         }
     }
 }

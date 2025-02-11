@@ -26,18 +26,18 @@ import java.util.List;
 public class EnchantingSolvers {
 
     public static SolverTypes currentSolverType = SolverTypes.NONE;
-    private static List<UltrasequencerSlot> ultrasequencerSlots = new ArrayList<>();
-    private static List<Integer> chronomatronOrder = new ArrayList<Integer>();
+    static List<UltrasequencerSlot> ultrasequencerSlots = new ArrayList<>();
+    static List<Integer> chronomatronOrder = new ArrayList<Integer>();
     private int previousIndex = 0;
     private boolean noteFinished = true;
     private boolean resolved = false;
-    private boolean resolving = false;
+    static boolean resolving = false;
     private Color green = new Color(0, 255, 0);
-    private int slotToClickUltrasequencer = 1;
+    static int slotToClickUltrasequencer = 1;
     private boolean clicked = false;
-    private int roundUltraSequencerSolver = 1;
+    static int roundUltraSequencerSolver = 1;
 
-    private class UltrasequencerSlot{
+    class UltrasequencerSlot{
         public Slot slot;
         public int quantity;
 
@@ -47,7 +47,7 @@ public class EnchantingSolvers {
         }
     }
 
-    private enum SolverTypes {
+    enum SolverTypes {
         NONE,
         CHRONOMATRON,
         ULTRASEQUENCER,
@@ -240,44 +240,5 @@ public class EnchantingSolvers {
         }
     }
 
-    @SubscribeEvent
-    public void onMouseClick(GuiScreenEvent.MouseInputEvent.Pre event) {
-        if (!Mouse.getEventButtonState()) return;
-        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChest)) return; // Check if the current screen is a chest GUI
-        GuiChest chestGui = (GuiChest) Minecraft.getMinecraft().currentScreen;
-        if (chestGui.getSlotUnderMouse() == null) return;
-        int slotIndex = chestGui.getSlotUnderMouse().getSlotIndex();
-        if (Configuration.experimentationChronomatronSolver && currentSolverType == SolverTypes.CHRONOMATRON && resolving && !chronomatronOrder.isEmpty()) {
-            if (slotIndex == chronomatronOrder.get(0) ||
-                    slotIndex == chronomatronOrder.get(0) + 9 ||
-                    (slotIndex == chronomatronOrder.get(0) + 18 && !TablistParser.currentOpenChestName.contains("Transcendent") && !TablistParser.currentOpenChestName.contains("Metaphysical"))) {
-                return; // Valid case, no need to cancel the event
-            }
-            if (Configuration.experimentationPreventMissclicks) event.setCanceled(true);
-        } else if (Configuration.experimentationUltraSequencerSolver && currentSolverType == SolverTypes.ULTRASEQUENCER && resolving) {
-            for(UltrasequencerSlot slot : ultrasequencerSlots){
-                //System.out.println(slotToClickUltrasequencer + ", " + slot.quantity);
-                ItemStack itemInSlot = chestGui.inventorySlots.getInventory().get(slotIndex);
-                if (slot.slot == chestGui.getSlotUnderMouse() && slotToClickUltrasequencer == slot.quantity) {
-                    if (ultrasequencerSlots.size() == slotToClickUltrasequencer) roundUltraSequencerSolver++;
-                    slotToClickUltrasequencer++;
-                    return;
-                }
-                if (itemInSlot == null) continue;
-                if (itemInSlot.getItem() == Items.dye) continue;
-            }
-            if (Configuration.experimentationPreventMissclicks) event.setCanceled(true); // cancel click if not found
-        }
-    }
 
-    /*@SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onDisplayTooltip(ItemTooltipEvent event) {
-        if (event.isCancelable()) event.setCanceled(true);
-        event = new ItemTooltipEvent(event.itemStack, event.entityPlayer, null, false);
-    }/*
-
-    /*public class CustomTooltipHandler extends IContainerTooltipHandler {
-        @override
-        public void shouldShow
-    }*/
 }

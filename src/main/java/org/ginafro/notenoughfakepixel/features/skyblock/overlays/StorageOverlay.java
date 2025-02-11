@@ -64,7 +64,7 @@ public class StorageOverlay extends GuiScreen {
         }
     }
     if(enderChests > 9){
-        System.out.println(enderChests);
+        //System.out.println(enderChests);
         enderChests = 9;
     }
     for(int i = 0;i < 18;i++){
