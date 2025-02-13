@@ -51,7 +51,6 @@ This is a fork and remaster of official NotEnoughFakepixel mod from GinaFro.
 
 ### Dungeons
 - General
-  - Show Starred mobs
   - Dungeon Map
   - Three Weirdos Solver
   - Auto Ready FIX **(NEW)**
